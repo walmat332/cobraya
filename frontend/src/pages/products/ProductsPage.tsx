@@ -213,7 +213,7 @@ export default function ProductsPage() {
                       {product.type === 'PRODUCT' ? 'Producto' : 'Servicio'}
                     </span>
                   </td>
-                  <td className="py-3 px-4 text-right font-semibold text-slate-900">S/ {product.price.toFixed(2)}</td>
+                  <td className="py-3 px-4 text-right font-semibold text-slate-900">S/ {Number(product.price || 0).toFixed(2)}</td>
                   <td className="py-3 px-4 text-right">
                     <button onClick={() => handleEdit(product)} className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg mr-1">
                       <Pencil size={18} />
@@ -231,4 +231,5 @@ export default function ProductsPage() {
     </div>
   );
 }
+
 
