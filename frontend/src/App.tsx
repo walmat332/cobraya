@@ -20,7 +20,8 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Login />} />`n        <Route path="/register" element={<Register />} />
+        <Route path="/" element={<Login />} />
+        <Route path="/register" element={<Register />} />
         
         <Route path="/" element={
           <ProtectedRoute>
@@ -30,7 +31,8 @@ function App() {
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="nueva-venta" element={<NewSale />} />
           <Route path="comprobantes" element={<DocumentsPage />} />
-          <Route path="productos" element={<ProductsPage />} />`n          <Route path="reportes" element={<ReportsPage />} />
+          <Route path="productos" element={<ProductsPage />} />
+          <Route path="reportes" element={<ReportsPage />} />
           <Route path="clientes" element={<div className="p-8"><h1 className="text-2xl font-bold">Clientes (Próximamente)</h1></div>} />
           <Route path="configuracion" element={<div className="p-8"><h1 className="text-2xl font-bold">Configuración (Próximamente)</h1></div>} />
         </Route>
@@ -40,7 +42,3 @@ function App() {
 }
 
 export default App;
-
-
-
-
