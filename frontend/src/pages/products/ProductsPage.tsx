@@ -26,7 +26,7 @@ export default function ProductsPage() {
   const fetchProducts = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`${API_URL}/products`, {
+      const response = await fetch(${API_URL}/products', {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       if (response.ok) {
@@ -49,8 +49,8 @@ export default function ProductsPage() {
     try {
       const token = localStorage.getItem('token');
       const url = editingId 
-        ? `http://localhost:3000/products/${editingId}`
-        : `${API_URL}/products`;
+        ? `${API_URL}/products/${editingId}`
+        : ${API_URL}/products';
       
       const method = editingId ? 'PUT' : 'POST';
       
@@ -95,7 +95,7 @@ export default function ProductsPage() {
     if (!confirm('¿Estás seguro de eliminar este producto?')) return;
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`http://localhost:3000/products/${id}`, {
+      const response = await fetch(`${API_URL}/products/${id}`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${token}` }
       });
@@ -213,7 +213,7 @@ export default function ProductsPage() {
                       {product.type === 'PRODUCT' ? 'Producto' : 'Servicio'}
                     </span>
                   </td>
-                  <td className="py-3 px-4 text-right font-semibold text-slate-900">S/ {Number(product.price || 0).toFixed(2)}</td>
+                  <td className="py-3 px-4 text-right font-semibold text-slate-900">S/ {product.price.toFixed(2)}</td>
                   <td className="py-3 px-4 text-right">
                     <button onClick={() => handleEdit(product)} className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg mr-1">
                       <Pencil size={18} />
@@ -231,5 +231,4 @@ export default function ProductsPage() {
     </div>
   );
 }
-
 

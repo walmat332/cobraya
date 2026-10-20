@@ -36,7 +36,7 @@ export default function CatalogFlow({ saleData, onUpdate, onReset }: Props) {
     const loadProducts = async () => {
       try {
         const token = localStorage.getItem('token');
-        const response = await fetch(`${API_URL}/products`, {
+        const response = await fetch(${API_URL}/products', {
           headers: { 'Authorization': `Bearer ${token}` }
         });
         if (response.ok) {
@@ -112,7 +112,7 @@ export default function CatalogFlow({ saleData, onUpdate, onReset }: Props) {
         setLoadingRuc(true);
         try {
           const token = localStorage.getItem('token');
-          const response = await fetch(`http://localhost:3000/ruc/consultar?ruc=${ruc}`, {
+          const response = await fetch(`${API_URL}/ruc/consultar?ruc=${ruc}`, {
             headers: { 'Authorization': `Bearer ${token}` },
           });
           const data = await response.json();
@@ -146,7 +146,7 @@ export default function CatalogFlow({ saleData, onUpdate, onReset }: Props) {
   const handleEmit = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`${API_URL}/documents`, {
+      const response = await fetch(${API_URL}/documents', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
         body: JSON.stringify({

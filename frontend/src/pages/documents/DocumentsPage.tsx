@@ -32,7 +32,7 @@ export default function DocumentsPage() {
   const fetchDocuments = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`${API_URL}/documents`, {
+      const response = await fetch(${API_URL}/documents', {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       if (response.ok) {
@@ -50,7 +50,7 @@ export default function DocumentsPage() {
     if (!confirm('¿Estás seguro de anular este comprobante?')) return;
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`http://localhost:3000/documents/${id}/status`, {
+      const response = await fetch(`${API_URL}/documents/${id}/status`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
