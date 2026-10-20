@@ -1,4 +1,5 @@
-﻿import { useState, useEffect } from 'react';
+﻿import { API_URL } from '../../lib/api';
+import { useState, useEffect } from 'react';
 import { Plus, Pencil, Trash2, Package, Wrench } from 'lucide-react';
 
 interface Product {
@@ -25,7 +26,7 @@ export default function ProductsPage() {
   const fetchProducts = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:3000/products', {
+      const response = await fetch(`${API_URL}/products`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       if (response.ok) {
@@ -49,7 +50,7 @@ export default function ProductsPage() {
       const token = localStorage.getItem('token');
       const url = editingId 
         ? `http://localhost:3000/products/${editingId}`
-        : 'http://localhost:3000/products';
+        : `${API_URL}/products`;
       
       const method = editingId ? 'PUT' : 'POST';
       
@@ -230,3 +231,4 @@ export default function ProductsPage() {
     </div>
   );
 }
+

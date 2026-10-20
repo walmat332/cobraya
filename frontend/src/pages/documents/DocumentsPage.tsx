@@ -1,4 +1,5 @@
-﻿import { useState, useEffect } from 'react';
+﻿import { API_URL } from '../../lib/api';
+import { useState, useEffect } from 'react';
 import { Search, Filter, Eye, Printer, XCircle, Download, Calendar, FileText } from 'lucide-react';
 import PrintTicket from '../../components/PrintTicket';
 
@@ -31,7 +32,7 @@ export default function DocumentsPage() {
   const fetchDocuments = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:3000/documents', {
+      const response = await fetch(`${API_URL}/documents`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       if (response.ok) {
@@ -279,3 +280,4 @@ export default function DocumentsPage() {
     </div>
   );
 }
+
