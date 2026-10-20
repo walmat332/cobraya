@@ -1,8 +1,10 @@
-﻿const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+﻿const API_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
+  ? 'http://localhost:3000' 
+  : 'https://cobraya-backend.onrender.com';
 
 export const api = {
   async login(email: string, password: string) {
-    const res = await fetch(`${API_URL}/auth/login`, {
+    const res = await fetch(${API_URL}/auth/login, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, password }),
@@ -15,7 +17,7 @@ export const api = {
   },
 
   async register(email: string, password: string, companyName: string, companyRuc: string) {
-    const res = await fetch(`${API_URL}/auth/register`, {
+    const res = await fetch(${API_URL}/auth/register, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, password, companyName, companyRuc }),
@@ -29,8 +31,8 @@ export const api = {
 
   async get(endpoint: string) {
     const token = localStorage.getItem('token');
-    const res = await fetch(`${API_URL}${endpoint}`, {
-      headers: { 'Authorization': `Bearer ${token}` },
+    const res = await fetch(${API_URL}, {
+      headers: { 'Authorization': Bearer  },
     });
     if (!res.ok) throw new Error('Error en la petición');
     return res.json();
@@ -38,11 +40,11 @@ export const api = {
 
   async post(endpoint: string, data: any) {
     const token = localStorage.getItem('token');
-    const res = await fetch(`${API_URL}${endpoint}`, {
+    const res = await fetch(${API_URL}, {
       method: 'POST',
       headers: { 
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}` 
+        'Authorization': Bearer  
       },
       body: JSON.stringify(data),
     });
@@ -55,5 +57,3 @@ export const api = {
     localStorage.removeItem('user');
   }
 };
-
-
