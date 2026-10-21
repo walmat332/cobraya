@@ -1,5 +1,5 @@
 ﻿import { useState, useEffect } from 'react';
-import { Search, Filter, Eye, Printer, XCircle, Download, Calendar, FileText } from 'lucide-react';
+import { Search, Filter, Eye, Printer, XCircle, Download, Calendar, FileText, AlertCircle } from 'lucide-react';
 import PrintTicket from '../../components/PrintTicket';
 import { API_URL } from '../../lib/api'; // <-- AGREGADO: Importamos la URL dinámica
 
@@ -19,6 +19,7 @@ interface Document {
 export default function DocumentsPage() {
   const [documents, setDocuments] = useState<Document[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string>('');
   const [filterType, setFilterType] = useState<string>('ALL');
   const [filterStatus, setFilterStatus] = useState<string>('ALL');
   const [searchTerm, setSearchTerm] = useState('');
@@ -39,8 +40,19 @@ export default function DocumentsPage() {
       if (response.ok) {
         const data = await response.json();
         setDocuments(data);
+        setError('');
+      } else {
+        let msg = `Error al cargar comprobantes (${response.status})`;
+        try {
+          const err = await response.json();
+          if (err.message) msg = err.message;
+        } catch {}
+        setError(msg);
+        console.error('Error cargando documentos:', response.status, msg);
       }
     } catch (error) {
+      const msg = 'Error de conexión al cargar comprobantes';
+      setError(msg);
       console.error('Error cargando documentos:', error);
     } finally {
       setLoading(false);
@@ -63,6 +75,14 @@ export default function DocumentsPage() {
       if (response.ok) {
         fetchDocuments();
         alert('Comprobante anulado exitosamente');
+      } else {
+        let msg = 'Error al anular el comprobante';
+        try {
+          const err = await response.json();
+          if (err.message) msg = err.message;
+          else if (err.error) msg = err.error;
+        } catch {}
+        alert(msg);
       }
     } catch (error) {
       console.error('Error al anular:', error);
@@ -167,8 +187,21 @@ export default function DocumentsPage() {
       <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
         {filteredDocuments.length === 0 ? (
           <div className="p-12 text-center text-slate-500">
-            <FileText size={48} className="mx-auto mb-3 text-slate-300" />
-            <p>No hay comprobantes que coincidan con los filtros</p>
+            {error ? (
+              <>
+                <AlertCircle size={48} className="mx-auto mb-3 text-red-300" />
+                <p className="text-red-600 font-medium">{error}</p>
+                <p className="text-sm mt-2">No se pudieron cargar los comprobantes. Verifica tu sesión o la conexión con el servidor.</p>
+                <button onClick={() => { setLoading(true); fetchDocuments(); }} className="mt-4 px-4 py-2 bg-white border border-slate-200 rounded-lg text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors">
+                  Reintentar
+                </button>
+              </>
+            ) : (
+              <>
+                <FileText size={48} className="mx-auto mb-3 text-slate-300" />
+                <p>No hay comprobantes que coincidan con los filtros</p>
+              </>
+            )}
           </div>
         ) : (
           <div className="overflow-x-auto">

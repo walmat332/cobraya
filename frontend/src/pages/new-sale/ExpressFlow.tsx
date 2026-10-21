@@ -1,6 +1,7 @@
 ﻿import { useState, useEffect } from 'react';
 import { User, Search, AlertCircle } from 'lucide-react';
 import PrintTicket from '../../components/PrintTicket';
+import { API_URL } from '../../lib/api';
 
 interface Props {
   saleData: any;
@@ -59,7 +60,7 @@ export default function ExpressFlow({ saleData, onUpdate, onReset }: Props) {
         setLoadingRuc(true);
         try {
           const token = localStorage.getItem('token');
-          const response = await fetch(`http://localhost:3000/ruc/consultar?ruc=${ruc}`, {
+          const response = await fetch(`${API_URL}/ruc/consultar?ruc=${ruc}`, {
             headers: { 'Authorization': `Bearer ${token}` },
           });
           const data = await response.json();
@@ -134,6 +135,17 @@ export default function ExpressFlow({ saleData, onUpdate, onReset }: Props) {
           items: [{ description: description || 'Venta rápida', quantity: 1, unitPrice: parseFloat(amount), subtotal: totals.subtotal, igv: totals.igv, total: totals.total }],
         }),
       });
+      if (!response.ok) {
+        let msg = 'Error al emitir el comprobante';
+        try {
+          const err = await response.json();
+          if (err.message) msg = err.message;
+          else if (err.error) msg = err.error;
+        } catch {}
+        console.error('Error al emitir:', response.status, msg);
+        alert(msg);
+        return;
+      }
       const data = await response.json();
       setEmittedDoc(data);
       setStep(5);

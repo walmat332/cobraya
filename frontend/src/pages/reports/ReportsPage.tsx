@@ -1,5 +1,6 @@
 ﻿import { useState, useEffect } from 'react';
 import { TrendingUp, Receipt, ShoppingCart, DollarSign, Calendar } from 'lucide-react';
+import { API_URL } from '../../lib/api';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 
 const COLORS = { BOLETA: '#3B82F6', FACTURA: '#8B5CF6', RECIBO: '#F59E0B' };

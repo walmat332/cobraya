@@ -1,6 +1,7 @@
 ﻿import { Controller, Get, Post, Patch, Body, Param, UseGuards, Req } from '@nestjs/common';
 import { DocumentsService } from './documents.service';
 import { CreateDocumentDto } from './dto/create-document.dto';
+import { UpdateDocumentStatusDto } from './dto/update-document-status.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { CompanyId } from '../common/decorators/company-id.decorator';
 
@@ -29,6 +30,15 @@ export class DocumentsController {
   @Post()
   create(@Body() createDocumentDto: CreateDocumentDto, @CompanyId() companyId: string) {
     return this.documentsService.create(createDocumentDto, companyId);
+  }
+
+  @Patch(':id/status')
+  updateStatus(
+    @Param('id') id: string,
+    @Body() updateDto: UpdateDocumentStatusDto,
+    @CompanyId() companyId: string,
+  ) {
+    return this.documentsService.updateStatus(id, updateDto.status, companyId);
   }
 }
 

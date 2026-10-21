@@ -153,6 +153,12 @@ export class DocumentsService {
 
   async updateStatus(id: string, status: string, companyId: string): Promise<Document> {
     const doc = await this.findOne(id, companyId);
+
+    // ANULADO es un estado terminal: un comprobante anulado no se vuelve a anular.
+    if (doc.status === 'ANULADO' && status === 'ANULADO') {
+      throw new ConflictException('El comprobante ya se encuentra anulado');
+    }
+
     doc.status = status;
     return this.documentRepository.save(doc);
   }

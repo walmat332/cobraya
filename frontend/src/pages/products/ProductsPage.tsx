@@ -1,5 +1,6 @@
 ﻿import { useState, useEffect } from 'react';
 import { Plus, Pencil, Trash2, Package, Wrench } from 'lucide-react';
+import { API_URL } from '../../lib/api';
 
 interface Product {
   id: string;
@@ -48,7 +49,7 @@ export default function ProductsPage() {
     try {
       const token = localStorage.getItem('token');
       const url = editingId 
-        ? `http://localhost:3000/products/${editingId}`
+        ? `${API_URL}/products/${editingId}`
         : `${API_URL}/products`;
       
       const method = editingId ? 'PUT' : 'POST';
@@ -83,7 +84,7 @@ export default function ProductsPage() {
     setFormData({
       name: product.name,
       code: product.code || '',
-      price: product.price.toString(),
+      price: Number(product.price || 0).toString(),
       type: product.type
     });
     setEditingId(product.id);
@@ -94,7 +95,7 @@ export default function ProductsPage() {
     if (!confirm('¿Estás seguro de eliminar este producto?')) return;
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`http://localhost:3000/products/${id}`, {
+      const response = await fetch(`${API_URL}/products/${id}`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${token}` }
       });
@@ -212,7 +213,7 @@ export default function ProductsPage() {
                       {product.type === 'PRODUCT' ? 'Producto' : 'Servicio'}
                     </span>
                   </td>
-                  <td className="py-3 px-4 text-right font-semibold text-slate-900">S/ {product.price.toFixed(2)}</td>
+                  <td className="py-3 px-4 text-right font-semibold text-slate-900">S/ {Number(product.price || 0).toFixed(2)}</td>
                   <td className="py-3 px-4 text-right">
                     <button onClick={() => handleEdit(product)} className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg mr-1">
                       <Pencil size={18} />
