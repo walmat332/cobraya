@@ -19,7 +19,15 @@ import { DocumentItem } from './entities/document-item.entity';
     TypeOrmModule.forRoot({
       type: 'postgres',
       url: process.env.DATABASE_URL,
-      entities: [Company, User, Product, Customer, DocumentSequence, Document, DocumentItem],
+      entities: [
+        Company,
+        User,
+        Product,
+        Customer,
+        DocumentSequence,
+        Document,
+        DocumentItem,
+      ],
       synchronize: false,
       migrations: [__dirname + '/migrations/*{.ts,.js}'],
       ssl: { rejectUnauthorized: false },
@@ -28,7 +36,15 @@ import { DocumentItem } from './entities/document-item.entity';
     ProductsModule,
     DocumentsModule,
     RucModule,
-    TypeOrmModule.forFeature([Company, User, Product, Customer, DocumentSequence, Document, DocumentItem]),
+    TypeOrmModule.forFeature([
+      Company,
+      User,
+      Product,
+      Customer,
+      DocumentSequence,
+      Document,
+      DocumentItem,
+    ]),
   ],
 })
 export class AppModule {}

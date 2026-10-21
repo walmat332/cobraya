@@ -1,4 +1,9 @@
-﻿import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn } from 'typeorm';
+﻿import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  CreateDateColumn,
+} from 'typeorm';
 
 @Entity()
 export class Document {
@@ -45,4 +50,3 @@ export class Document {
     return `${this.series}-${this.number.toString().padStart(8, '0')}`;
   }
 }
-

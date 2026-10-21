@@ -15,6 +15,15 @@ export class Company {
   @Column({ nullable: true })
   address: string;
 
+  @Column({ nullable: true })
+  phone: string;
+
+  @Column({ nullable: true })
+  email: string;
+
+  @Column({ nullable: true, name: 'commercial_name' })
+  commercialName: string;
+
   @Column({ default: 'DEMO' }) // DEMO o PROD
   sunatEnvironment: string;
 

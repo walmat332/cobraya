@@ -38,7 +38,49 @@ export const api = {
     if (!res.ok) throw new Error('Error al guardar');
     return res.json();
   },
-  
+
+  async register(email: string, password: string, companyName: string, ruc: string) {
+    const res = await fetch(`${API_URL}/auth/register`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password, companyName, companyRuc: ruc }),
+    });
+    if (!res.ok) {
+      const errBody = await res.text();
+      throw new Error(errBody || 'Error al registrarse');
+    }
+    return res.json();
+  },
+
+  async getCompany() {
+    const token = localStorage.getItem('token');
+    const res = await fetch(`${API_URL}/auth/me`, {
+      headers: { 'Authorization': `Bearer ${token}` },
+    });
+    if (!res.ok) {
+      const err = await res.json();
+      throw new Error(err.message || 'Error al obtener datos de la empresa');
+    }
+    return res.json();
+  },
+
+  async updateCompany(data: Record<string, unknown>) {
+    const token = localStorage.getItem('token');
+    const res = await fetch(`${API_URL}/auth/me`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      },
+      body: JSON.stringify(data),
+    });
+    if (!res.ok) {
+      const err = await res.json();
+      throw new Error(err.message || 'Error al actualizar datos de la empresa');
+    }
+    return res.json();
+  },
+
   logout() {
     localStorage.removeItem('token');
     localStorage.removeItem('user');

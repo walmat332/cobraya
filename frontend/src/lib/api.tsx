@@ -1,5 +1,5 @@
 ﻿export const API_URL = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
-    ? `${API_URL}`
+    ? 'http://localhost:3000'
     : 'https://cobraya-backend.onrender.com';
 export const api = {
     async login(email, password) {
@@ -9,7 +9,7 @@ export const api = {
             body: JSON.stringify({ email, password }),
         });
         if (!res.ok)
-            throw new Error('Credenciales invÃ¡lidas');
+            throw new Error('Credenciales inválidas');
         const data = await res.json();
         localStorage.setItem('token', data.access_token);
         localStorage.setItem('user', JSON.stringify(data.user));
@@ -34,7 +34,7 @@ export const api = {
             headers: { 'Authorization': `Bearer ${token}` },
         });
         if (!res.ok)
-            throw new Error('Error en la peticiÃ³n');
+            throw new Error('Error en la petición');
         return res.json();
     },
     async post(endpoint, data) {
@@ -49,6 +49,33 @@ export const api = {
         });
         if (!res.ok)
             throw new Error('Error al guardar');
+        return res.json();
+    },
+    async getCompany() {
+        const token = localStorage.getItem('token');
+        const res = await fetch(`${API_URL}/auth/me`, {
+            headers: { 'Authorization': `Bearer ${token}` },
+        });
+        if (!res.ok) {
+            const err = await res.json();
+            throw new Error(err.message || 'Error al obtener datos de la empresa');
+        }
+        return res.json();
+    },
+    async updateCompany(data) {
+        const token = localStorage.getItem('token');
+        const res = await fetch(`${API_URL}/auth/me`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify(data),
+        });
+        if (!res.ok) {
+            const err = await res.json();
+            throw new Error(err.message || 'Error al actualizar datos de la empresa');
+        }
         return res.json();
     },
     logout() {

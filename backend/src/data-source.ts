@@ -13,8 +13,16 @@ config();
 export default new DataSource({
   type: 'postgres',
   url: process.env.DATABASE_URL,
-  entities: [User, Company, Product, Document, DocumentItem, DocumentSequence, Customer],
+  entities: [
+    User,
+    Company,
+    Product,
+    Document,
+    DocumentItem,
+    DocumentSequence,
+    Customer,
+  ],
   migrations: [__dirname + '/migrations/*{.ts,.js}'],
   synchronize: false,
-  ssl: { rejectUnauthorized: false }
+  ssl: { rejectUnauthorized: false },
 });

@@ -15,7 +15,7 @@ export class RucController {
 
     // Obtenemos el companyId del usuario autenticado (o usamos 'default' si no existe)
     const companyId = req.user?.companyId || 'default';
-    
+
     return this.rucService.consultarRUC(ruc, companyId);
   }
 }

@@ -71,7 +71,7 @@ export default function CatalogFlow({ saleData, onUpdate, onReset }: Props) {
           id: product.id, 
           description: product.name, 
           quantity: 1, 
-          unitPrice: product.price 
+          unitPrice: Number(product.price || 0)
         }];
         setCartVersion(v => v + 1);
         return newCart;
@@ -120,12 +120,13 @@ export default function CatalogFlow({ saleData, onUpdate, onReset }: Props) {
     if (value.length > 0) validateRuc(value);
   };
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(() => {
-    if (documentType === 'FACTURA' && customerType === 'GENERIC') {
+  // ✅ SOLUCIÓN: Manejador de evento en lugar de useEffect para evitar cascading renders
+  const handleDocumentTypeChange = (newDocType: 'BOLETA' | 'FACTURA' | 'RECIBO') => {
+    setDocumentType(newDocType);
+    if (newDocType === 'FACTURA' && customerType === 'GENERIC') {
       setCustomerType('SEARCH');
     }
-  }, [documentType]);
+  };
 
   useEffect(() => {
     const consultarRuc = async () => {
@@ -206,6 +207,19 @@ export default function CatalogFlow({ saleData, onUpdate, onReset }: Props) {
           })),
         }),
       });
+      if (!response.ok) {
+        let msg = 'Error al emitir el comprobante';
+        try {
+          const err = await response.json();
+          if (err.message) msg = err.message;
+          else if (err.error) msg = err.error;
+        } catch (parseError) {
+          console.error('Respuesta de error no interpretable:', parseError);
+        }
+        console.error('Error al emitir:', response.status, msg);
+        alert(msg);
+        return;
+      }
       const data = await response.json();
       setEmittedDoc(data);
       setStep(5);
@@ -249,7 +263,7 @@ export default function CatalogFlow({ saleData, onUpdate, onReset }: Props) {
                 className="card p-4 hover:shadow-md transition-all cursor-pointer text-left border-2 border-transparent hover:border-primary-200"
               >
                 <div className="aspect-square bg-slate-100 rounded-lg mb-2 flex items-center justify-center">
-                  <span className="text-3xl">{product.type === 'PRODUCT' ? '📦' : ''}</span>
+                  <span className="text-3xl">{product.type === 'PRODUCT' ? '📦' : '🔧'}</span>
                 </div>
                 <h3 className="font-semibold text-sm text-slate-900 truncate">{product.name}</h3>
                 {product.code && <p className="text-xs text-slate-500 mb-1">Cod: {product.code}</p>}
@@ -329,21 +343,21 @@ export default function CatalogFlow({ saleData, onUpdate, onReset }: Props) {
         </div>
         <div className="grid grid-cols-3 gap-3">
           <button 
-            onClick={() => setDocumentType('BOLETA')} 
+            onClick={() => handleDocumentTypeChange('BOLETA')} 
             className={`card p-4 text-center transition-all cursor-pointer ${documentType === 'BOLETA' ? 'ring-4 ring-primary-500 bg-primary-50' : 'hover:shadow-md'}`}
           >
             <div className="text-3xl mb-2">🧾</div>
             <div className="font-bold text-slate-900">Boleta</div>
           </button>
           <button 
-            onClick={() => setDocumentType('FACTURA')} 
+            onClick={() => handleDocumentTypeChange('FACTURA')} 
             className={`card p-4 text-center transition-all cursor-pointer ${documentType === 'FACTURA' ? 'ring-4 ring-primary-500 bg-primary-50' : 'hover:shadow-md'}`}
           >
-            <div className="text-3xl mb-2"></div>
+            <div className="text-3xl mb-2">📄</div>
             <div className="font-bold text-slate-900">Factura</div>
           </button>
           <button 
-            onClick={() => setDocumentType('RECIBO')} 
+            onClick={() => handleDocumentTypeChange('RECIBO')} 
             className={`card p-4 text-center transition-all cursor-pointer ${documentType === 'RECIBO' ? 'ring-4 ring-primary-500 bg-primary-50' : 'hover:shadow-md'}`}
           >
             <div className="text-3xl mb-2">📋</div>

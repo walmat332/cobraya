@@ -23,4 +23,3 @@ export class Product {
   @Column({ default: true })
   igvIncluded: boolean;
 }
-

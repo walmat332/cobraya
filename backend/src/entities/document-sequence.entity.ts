@@ -21,5 +21,3 @@ export class DocumentSequence {
   @Column({ default: 1 })
   nextNumber: number;
 }
-
-

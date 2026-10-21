@@ -1,4 +1,8 @@
-﻿import { Injectable, NotFoundException, ConflictException } from '@nestjs/common';
+﻿import {
+  Injectable,
+  NotFoundException,
+  ConflictException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, DataSource } from 'typeorm';
 import { Document } from '../entities/document.entity';
@@ -9,9 +13,12 @@ import { CreateDocumentDto } from './dto/create-document.dto';
 @Injectable()
 export class DocumentsService {
   constructor(
-    @InjectRepository(Document) private documentRepository: Repository<Document>,
-    @InjectRepository(DocumentItem) private documentItemRepository: Repository<DocumentItem>,
-    @InjectRepository(DocumentSequence) private sequenceRepository: Repository<DocumentSequence>,
+    @InjectRepository(Document)
+    private documentRepository: Repository<Document>,
+    @InjectRepository(DocumentItem)
+    private documentItemRepository: Repository<DocumentItem>,
+    @InjectRepository(DocumentSequence)
+    private sequenceRepository: Repository<DocumentSequence>,
     private dataSource: DataSource,
   ) {}
 
@@ -31,35 +38,46 @@ export class DocumentsService {
   }
 
   async create(dto: CreateDocumentDto, companyId: string) {
-    const series = dto.documentType === 'BOLETA' ? 'B001' : dto.documentType === 'FACTURA' ? 'F001' : 'R001';
-    
+    const series =
+      dto.documentType === 'BOLETA'
+        ? 'B001'
+        : dto.documentType === 'FACTURA'
+          ? 'F001'
+          : 'R001';
+
     // Transacción segura. En SQLite, la transacción ya serializa las escrituras.
     // El @Unique en la entidad previene duplicados a nivel de base de datos.
     try {
-      const sequence = await this.dataSource.transaction(async manager => {
-        let seq = await manager.findOne(DocumentSequence, { 
-          where: { companyId, series }
+      const sequence = await this.dataSource.transaction(async (manager) => {
+        let seq = await manager.findOne(DocumentSequence, {
+          where: { companyId, series },
         });
-        
+
         if (!seq) {
-          seq = manager.create(DocumentSequence, { 
-            companyId, 
-            series, 
-            currentNumber: 0, 
-            nextNumber: 1, 
-            documentType: dto.documentType 
+          seq = manager.create(DocumentSequence, {
+            companyId,
+            series,
+            currentNumber: 0,
+            nextNumber: 1,
+            documentType: dto.documentType,
           });
         } else {
           seq.currentNumber += 1;
           seq.nextNumber += 1;
         }
-        
+
         return manager.save(DocumentSequence, seq);
       });
 
-      const subtotal = dto.items.reduce((sum, item) => sum + Number(item.subtotal), 0);
+      const subtotal = dto.items.reduce(
+        (sum, item) => sum + Number(item.subtotal),
+        0,
+      );
       const igv = dto.items.reduce((sum, item) => sum + Number(item.igv), 0);
-      const total = dto.items.reduce((sum, item) => sum + Number(item.total), 0);
+      const total = dto.items.reduce(
+        (sum, item) => sum + Number(item.total),
+        0,
+      );
 
       const document = this.documentRepository.create({
         companyId,
@@ -76,7 +94,7 @@ export class DocumentsService {
       });
       const savedDoc = await this.documentRepository.save(document);
 
-      const items = dto.items.map(item =>
+      const items = dto.items.map((item) =>
         this.documentItemRepository.create({
           companyId, // <-- AGREGADO: Campo obligatorio en la entidad
           documentId: savedDoc.id,
@@ -86,7 +104,7 @@ export class DocumentsService {
           subtotal: item.subtotal,
           igv: item.igv,
           total: item.total,
-        })
+        }),
       );
       await this.documentItemRepository.save(items);
 
@@ -98,7 +116,9 @@ export class DocumentsService {
     } catch (error) {
       // Si el @Unique falla (muy raro en SQLite por la serialización), lanzamos error claro
       if (error.code === 'SQLITE_CONSTRAINT_UNIQUE' || error.code === '23505') {
-        throw new ConflictException('Error de concurrencia al generar el correlativo. Intente nuevamente.');
+        throw new ConflictException(
+          'Error de concurrencia al generar el correlativo. Intente nuevamente.',
+        );
       }
       throw error;
     }
@@ -110,7 +130,10 @@ export class DocumentsService {
       order: { createdAt: 'DESC' },
     });
 
-    const totalSales = documents.reduce((sum, doc) => sum + Number(doc.total), 0);
+    const totalSales = documents.reduce(
+      (sum, doc) => sum + Number(doc.total),
+      0,
+    );
     const totalDocuments = documents.length;
     const avgTicket = totalDocuments > 0 ? totalSales / totalDocuments : 0;
 
@@ -123,20 +146,20 @@ export class DocumentsService {
       last7Days[dateStr] = 0;
     }
 
-    documents.forEach(doc => {
+    documents.forEach((doc) => {
       const dateStr = new Date(doc.createdAt).toISOString().split('T')[0];
       if (last7Days.hasOwnProperty(dateStr)) {
         last7Days[dateStr] += Number(doc.total);
       }
     });
 
-    const dailySales = Object.keys(last7Days).map(date => ({
+    const dailySales = Object.keys(last7Days).map((date) => ({
       date: date.split('-').slice(1).join('/'),
-      total: last7Days[date]
+      total: last7Days[date],
     }));
 
     const byType = { BOLETA: 0, FACTURA: 0, RECIBO: 0 };
-    documents.forEach(doc => {
+    documents.forEach((doc) => {
       if (byType.hasOwnProperty(doc.documentType)) {
         byType[doc.documentType] += 1;
       }
@@ -151,7 +174,11 @@ export class DocumentsService {
     };
   }
 
-  async updateStatus(id: string, status: string, companyId: string): Promise<Document> {
+  async updateStatus(
+    id: string,
+    status: string,
+    companyId: string,
+  ): Promise<Document> {
     const doc = await this.findOne(id, companyId);
 
     // ANULADO es un estado terminal: un comprobante anulado no se vuelve a anular.
@@ -163,4 +190,3 @@ export class DocumentsService {
     return this.documentRepository.save(doc);
   }
 }
-

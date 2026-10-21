@@ -1,4 +1,13 @@
-﻿import { Controller, Get, Post, Body, Put, Delete, Param, UseGuards } from '@nestjs/common';
+﻿import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Put,
+  Delete,
+  Param,
+  UseGuards,
+} from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
@@ -21,12 +30,19 @@ export class ProductsController {
   }
 
   @Post()
-  create(@Body() createProductDto: CreateProductDto, @CompanyId() companyId: string) {
+  create(
+    @Body() createProductDto: CreateProductDto,
+    @CompanyId() companyId: string,
+  ) {
     return this.productsService.create(createProductDto, companyId);
   }
 
   @Put(':id')
-  update(@Param('id') id: string, @Body() updateProductDto: UpdateProductDto, @CompanyId() companyId: string) {
+  update(
+    @Param('id') id: string,
+    @Body() updateProductDto: UpdateProductDto,
+    @CompanyId() companyId: string,
+  ) {
     return this.productsService.update(id, updateProductDto, companyId);
   }
 

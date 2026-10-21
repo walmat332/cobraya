@@ -1,4 +1,13 @@
-﻿import { Controller, Get, Post, Patch, Body, Param, UseGuards, Req } from '@nestjs/common';
+﻿import {
+  Controller,
+  Get,
+  Post,
+  Patch,
+  Body,
+  Param,
+  UseGuards,
+  Req,
+} from '@nestjs/common';
 import { DocumentsService } from './documents.service';
 import { CreateDocumentDto } from './dto/create-document.dto';
 import { UpdateDocumentStatusDto } from './dto/update-document-status.dto';
@@ -11,7 +20,7 @@ export class DocumentsController {
   constructor(private readonly documentsService: DocumentsService) {}
 
   // ⚠️ IMPORTANTE: Las rutas específicas van PRIMERO, antes que las dinámicas (:id)
-  
+
   @Get('stats')
   async getStats(@CompanyId() companyId: string) {
     return this.documentsService.getStats(companyId);
@@ -28,7 +37,10 @@ export class DocumentsController {
   }
 
   @Post()
-  create(@Body() createDocumentDto: CreateDocumentDto, @CompanyId() companyId: string) {
+  create(
+    @Body() createDocumentDto: CreateDocumentDto,
+    @CompanyId() companyId: string,
+  ) {
     return this.documentsService.create(createDocumentDto, companyId);
   }
 
@@ -41,4 +53,3 @@ export class DocumentsController {
     return this.documentsService.updateStatus(id, updateDto.status, companyId);
   }
 }
-

@@ -9,7 +9,12 @@ import { Customer } from '../entities/customer.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Document, DocumentItem, DocumentSequence, Customer])
+    TypeOrmModule.forFeature([
+      Document,
+      DocumentItem,
+      DocumentSequence,
+      Customer,
+    ]),
   ],
   controllers: [DocumentsController],
   providers: [DocumentsService],

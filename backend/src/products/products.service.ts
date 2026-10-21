@@ -12,21 +12,36 @@ export class ProductsService {
   ) {}
 
   async findAll(companyId: string): Promise<Product[]> {
-    return this.productRepository.find({ where: { companyId }, order: { name: 'ASC' } });
+    return this.productRepository.find({
+      where: { companyId },
+      order: { name: 'ASC' },
+    });
   }
 
   async findOne(id: string, companyId: string): Promise<Product> {
-    const product = await this.productRepository.findOne({ where: { id, companyId } });
+    const product = await this.productRepository.findOne({
+      where: { id, companyId },
+    });
     if (!product) throw new NotFoundException('Producto no encontrado');
     return product;
   }
 
-  async create(createProductDto: CreateProductDto, companyId: string): Promise<Product> {
-    const product = this.productRepository.create({ ...createProductDto, companyId });
+  async create(
+    createProductDto: CreateProductDto,
+    companyId: string,
+  ): Promise<Product> {
+    const product = this.productRepository.create({
+      ...createProductDto,
+      companyId,
+    });
     return this.productRepository.save(product);
   }
 
-  async update(id: string, updateProductDto: UpdateProductDto, companyId: string): Promise<Product> {
+  async update(
+    id: string,
+    updateProductDto: UpdateProductDto,
+    companyId: string,
+  ): Promise<Product> {
     const product = await this.findOne(id, companyId);
     Object.assign(product, updateProductDto);
     return this.productRepository.save(product);

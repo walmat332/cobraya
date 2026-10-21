@@ -1,5 +1,5 @@
-﻿import { useState, useEffect } from 'react';
-import { Search, Filter, Eye, Printer, XCircle, Download, Calendar, FileText, AlertCircle } from 'lucide-react';
+﻿import { useState, useEffect, useCallback } from 'react';
+import { Search, Eye, Printer, XCircle, Download, FileText, AlertCircle } from 'lucide-react';
 import PrintTicket from '../../components/PrintTicket';
 import { API_URL } from '../../lib/api'; // <-- AGREGADO: Importamos la URL dinámica
 
@@ -26,11 +26,7 @@ export default function DocumentsPage() {
   const [selectedDoc, setSelectedDoc] = useState<Document | null>(null);
   const [showPrintModal, setShowPrintModal] = useState(false);
 
-  useEffect(() => {
-    fetchDocuments();
-  }, []);
-
-  const fetchDocuments = async () => {
+  const fetchDocuments = useCallback(async () => {
     try {
       const token = localStorage.getItem('token');
       // <-- CORREGIDO: Usa API_URL con comillas invertidas
@@ -46,7 +42,9 @@ export default function DocumentsPage() {
         try {
           const err = await response.json();
           if (err.message) msg = err.message;
-        } catch {}
+        } catch (parseError) {
+          console.error('Respuesta de error no interpretable:', parseError);
+        }
         setError(msg);
         console.error('Error cargando documentos:', response.status, msg);
       }
@@ -57,7 +55,11 @@ export default function DocumentsPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    fetchDocuments();
+  }, [fetchDocuments]);
 
   const handleAnular = async (id: string) => {
     if (!confirm('¿Estás seguro de anular este comprobante?')) return;
@@ -81,7 +83,9 @@ export default function DocumentsPage() {
           const err = await response.json();
           if (err.message) msg = err.message;
           else if (err.error) msg = err.error;
-        } catch {}
+        } catch (parseError) {
+          console.error('Respuesta de error no interpretable:', parseError);
+        }
         alert(msg);
       }
     } catch (error) {

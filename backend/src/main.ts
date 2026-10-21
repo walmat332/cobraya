@@ -11,4 +11,3 @@ async function bootstrap() {
   console.log('🚀 CobraYa v2 Backend corriendo en http://localhost:3000');
 }
 bootstrap();
-

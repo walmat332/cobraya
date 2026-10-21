@@ -8,6 +8,7 @@ import Documents from './pages/Documents';
 import ProductsPage from './pages/products/ProductsPage';
 import ReportsPage from './pages/reports/ReportsPage';
 import DocumentsPage from './pages/documents/DocumentsPage';
+import Configuracion from './pages/configuracion/Configuracion';
 
 // Protección simple de rutas
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
@@ -34,7 +35,7 @@ function App() {
           <Route path="productos" element={<ProductsPage />} />
           <Route path="reportes" element={<ReportsPage />} />
           <Route path="clientes" element={<div className="p-8"><h1 className="text-2xl font-bold">Clientes (Próximamente)</h1></div>} />
-          <Route path="configuracion" element={<div className="p-8"><h1 className="text-2xl font-bold">Configuración (Próximamente)</h1></div>} />
+          <Route path="configuracion" element={<Configuracion />} />
         </Route>
       </Routes>
     </BrowserRouter>

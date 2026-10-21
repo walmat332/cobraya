@@ -1,4 +1,11 @@
-﻿import { IsString, IsNumber, IsArray, ValidateNested, IsOptional, IsIn } from 'class-validator';
+﻿import {
+  IsString,
+  IsNumber,
+  IsArray,
+  ValidateNested,
+  IsOptional,
+  IsIn,
+} from 'class-validator';
 import { Type } from 'class-transformer';
 
 export class DocumentItemDto {
