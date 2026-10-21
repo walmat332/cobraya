@@ -18,8 +18,8 @@ export class User {
   @Column()
   password: string;
 
-  @Column({ default: 'ADMIN' })
-  role: string;
+  @Column({ type: 'varchar', default: 'USER' })
+  role: string; // 'USER', 'SUPER_ADMIN'
 
   @ManyToOne(() => Company, (company) => company.users, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'companyId' })

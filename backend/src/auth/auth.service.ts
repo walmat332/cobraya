@@ -38,7 +38,7 @@ export class AuthService {
       id: randomUUID(),
       ruc: registerDto.companyRuc,
       razonSocial: registerDto.companyName,
-      sunatEnvironment: 'DEMO', // Por defecto en modo demo para el MVP
+      sunatEnvironment: 'DEMO',
     });
     const savedCompany = await this.companyRepository.save(company);
 
@@ -53,13 +53,16 @@ export class AuthService {
     });
     const savedUser = await this.userRepository.save(user);
 
-    // 4. Generar Token JWT
+    // 4. Generar Token JWT con datos de suscripción
     const payload = {
       sub: savedUser.id,
       email: savedUser.email,
       companyId: savedCompany.id,
       role: savedUser.role,
+      companyStatus: savedCompany.status || 'TRIAL',
+      companySubscriptionEndDate: savedCompany.subscriptionEndDate || null,
     };
+
     return {
       access_token: this.jwtService.sign(payload),
       user: {
@@ -67,14 +70,19 @@ export class AuthService {
         email: savedUser.email,
         role: savedUser.role,
         companyId: savedCompany.id,
+        companyStatus: savedCompany.status || 'TRIAL',
+        companySubscriptionEndDate: savedCompany.subscriptionEndDate || null,
       },
     };
   }
 
   async login(loginDto: LoginDto) {
+    // Buscar usuario y traer la relación con la empresa para leer su estado
     const user = await this.userRepository.findOne({
       where: { email: loginDto.email },
+      relations: ['company'],
     });
+    
     if (!user) {
       throw new UnauthorizedException('Credenciales inválidas');
     }
@@ -87,12 +95,16 @@ export class AuthService {
       throw new UnauthorizedException('Credenciales inválidas');
     }
 
+    // Generar Token JWT con datos de suscripción
     const payload = {
       sub: user.id,
       email: user.email,
       companyId: user.companyId,
       role: user.role,
+      companyStatus: user.company?.status || 'TRIAL',
+      companySubscriptionEndDate: user.company?.subscriptionEndDate || null,
     };
+
     return {
       access_token: this.jwtService.sign(payload),
       user: {
@@ -100,6 +112,8 @@ export class AuthService {
         email: user.email,
         role: user.role,
         companyId: user.companyId,
+        companyStatus: user.company?.status || 'TRIAL',
+        companySubscriptionEndDate: user.company?.subscriptionEndDate || null,
       },
     };
   }
@@ -115,11 +129,14 @@ export class AuthService {
       id: company.id,
       ruc: company.ruc,
       razonSocial: company.razonSocial,
-      commercialName: company.commercialName,
+      commercialName: company.commercialName, // Ajustado al nombre de la columna
       address: company.address,
       phone: company.phone,
       email: company.email,
       sunatEnvironment: company.sunatEnvironment,
+      status: company.status,
+      plan: company.plan,
+      subscriptionEndDate: company.subscriptionEndDate,
     };
   }
 
@@ -131,7 +148,6 @@ export class AuthService {
       throw new NotFoundException('Empresa no encontrada');
     }
 
-    // Validar que el RUC no cambie a uno que ya exista en otra empresa
     if (dto.ruc && dto.ruc !== company.ruc) {
       const existingCompany = await this.companyRepository.findOne({
         where: { ruc: dto.ruc },
@@ -145,7 +161,7 @@ export class AuthService {
 
     company.ruc = dto.ruc;
     company.razonSocial = dto.razonSocial;
-    company.commercialName = dto.commercialName ?? null;
+    company.commercialName = dto.commercialName ?? null; // Ajustado al nombre de la columna
     company.address = dto.address ?? null;
     company.phone = dto.phone ?? null;
     company.email = dto.email ?? null;
@@ -153,7 +169,6 @@ export class AuthService {
     try {
       return await this.companyRepository.save(company);
     } catch (error) {
-      // Violación de la restricción UNIQUE de PostgreSQL (carrera entre requests)
       if (error?.code === '23505') {
         throw new ConflictException(
           'El RUC ya está registrado por otra empresa',
@@ -163,3 +178,4 @@ export class AuthService {
     }
   }
 }
+

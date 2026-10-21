@@ -1,7 +1,7 @@
 ﻿import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
 import { User } from './user.entity';
 
-@Entity()
+@Entity('company')
 export class Company {
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -28,5 +28,14 @@ export class Company {
   sunatEnvironment: string;
 
   @OneToMany(() => User, (user) => user.company)
-  users: User[];
+  users: User[]; // 'TRIAL', 'ACTIVE', 'SUSPENDED' // 'BASICO', 'PRO', 'EMPRESARIAL'
+
+  @Column({ type: 'varchar', default: 'TRIAL' })
+  status: string;
+
+  @Column({ type: 'varchar', default: 'BASICO' })
+  plan: string;
+
+  @Column({ name: 'subscription_end_date', type: 'date', nullable: true })
+  subscriptionEndDate: Date | null;
 }

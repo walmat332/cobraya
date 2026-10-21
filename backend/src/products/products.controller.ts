@@ -1,4 +1,5 @@
-﻿import {
+﻿import { SubscriptionGuard } from '../common/guards/subscription.guard';
+import {
   Controller,
   Get,
   Post,
@@ -16,6 +17,7 @@ import { CompanyId } from '../common/decorators/company-id.decorator';
 
 @Controller('products')
 @UseGuards(JwtAuthGuard)
+@UseGuards(SubscriptionGuard)
 export class ProductsController {
   constructor(private productsService: ProductsService) {}
 
@@ -51,3 +53,4 @@ export class ProductsController {
     return this.productsService.remove(id, companyId);
   }
 }
+
