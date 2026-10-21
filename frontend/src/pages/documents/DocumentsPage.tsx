@@ -1,7 +1,7 @@
-﻿import { API_URL } from '../../lib/api';
-import { useState, useEffect } from 'react';
+﻿import { useState, useEffect } from 'react';
 import { Search, Filter, Eye, Printer, XCircle, Download, Calendar, FileText } from 'lucide-react';
 import PrintTicket from '../../components/PrintTicket';
+import { API_URL } from '../../lib/api'; // <-- AGREGADO: Importamos la URL dinámica
 
 interface Document {
   id: string;
@@ -32,7 +32,8 @@ export default function DocumentsPage() {
   const fetchDocuments = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(${API_URL}/documents', {
+      // <-- CORREGIDO: Usa API_URL con comillas invertidas
+      const response = await fetch(`${API_URL}/documents`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       if (response.ok) {
@@ -50,6 +51,7 @@ export default function DocumentsPage() {
     if (!confirm('¿Estás seguro de anular este comprobante?')) return;
     try {
       const token = localStorage.getItem('token');
+      // <-- CORREGIDO: Usa API_URL con comillas invertidas
       const response = await fetch(`${API_URL}/documents/${id}/status`, {
         method: 'PATCH',
         headers: {
@@ -99,7 +101,7 @@ export default function DocumentsPage() {
   });
 
   const getStatusBadge = (status: string) => {
-    const styles = {
+    const styles: Record<string, string> = {
       EMITIDO: 'bg-emerald-100 text-emerald-700',
       PENDING: 'bg-amber-100 text-amber-700',
       ANULADO: 'bg-red-100 text-red-700'
@@ -280,4 +282,3 @@ export default function DocumentsPage() {
     </div>
   );
 }
-

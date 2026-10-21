@@ -1,5 +1,4 @@
-﻿import { API_URL } from '../../lib/api';
-import { useState, useEffect } from 'react';
+﻿import { useState, useEffect } from 'react';
 import { Plus, Pencil, Trash2, Package, Wrench } from 'lucide-react';
 
 interface Product {
@@ -26,7 +25,7 @@ export default function ProductsPage() {
   const fetchProducts = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(${API_URL}/products', {
+      const response = await fetch('http://localhost:3000/products', {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       if (response.ok) {
@@ -49,8 +48,8 @@ export default function ProductsPage() {
     try {
       const token = localStorage.getItem('token');
       const url = editingId 
-        ? `${API_URL}/products/${editingId}`
-        : ${API_URL}/products';
+        ? `http://localhost:3000/products/${editingId}`
+        : 'http://localhost:3000/products';
       
       const method = editingId ? 'PUT' : 'POST';
       
@@ -95,7 +94,7 @@ export default function ProductsPage() {
     if (!confirm('¿Estás seguro de eliminar este producto?')) return;
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch(`${API_URL}/products/${id}`, {
+      const response = await fetch(`http://localhost:3000/products/${id}`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${token}` }
       });
@@ -231,4 +230,3 @@ export default function ProductsPage() {
     </div>
   );
 }
-
