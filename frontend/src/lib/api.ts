@@ -1,7 +1,5 @@
-﻿const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-
-export const API_URL = isLocal 
-  ? `${API_URL}` 
+﻿export const API_URL = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') 
+  ? 'http://localhost:3000' 
   : 'https://cobraya-backend.onrender.com';
 
 export const api = {
@@ -27,7 +25,7 @@ export const api = {
     return res.json();
   },
 
-  async post(endpoint: string, data: any) {
+  async post(endpoint: string, data: Record<string, unknown>) {
     const token = localStorage.getItem('token');
     const res = await fetch(`${API_URL}${endpoint}`, {
       method: 'POST',
