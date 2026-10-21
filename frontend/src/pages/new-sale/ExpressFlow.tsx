@@ -122,7 +122,7 @@ export default function ExpressFlow({ saleData, onUpdate, onReset }: Props) {
   const handleEmit = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('http://localhost:3000/documents', {
+      const response = await fetch(`${API_URL}/documents`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
         body: JSON.stringify({
@@ -324,6 +324,7 @@ export default function ExpressFlow({ saleData, onUpdate, onReset }: Props) {
     </div>
   );
 }
+
 
 
 

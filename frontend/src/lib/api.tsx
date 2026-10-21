@@ -1,5 +1,5 @@
-export const API_URL = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
-    ? 'http://localhost:3000'
+﻿export const API_URL = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+    ? `${API_URL}`
     : 'https://cobraya-backend.onrender.com';
 export const api = {
     async login(email, password) {
@@ -9,7 +9,7 @@ export const api = {
             body: JSON.stringify({ email, password }),
         });
         if (!res.ok)
-            throw new Error('Credenciales inválidas');
+            throw new Error('Credenciales invÃ¡lidas');
         const data = await res.json();
         localStorage.setItem('token', data.access_token);
         localStorage.setItem('user', JSON.stringify(data.user));
@@ -34,7 +34,7 @@ export const api = {
             headers: { 'Authorization': `Bearer ${token}` },
         });
         if (!res.ok)
-            throw new Error('Error en la petición');
+            throw new Error('Error en la peticiÃ³n');
         return res.json();
     },
     async post(endpoint, data) {
@@ -56,3 +56,4 @@ export const api = {
         localStorage.removeItem('user');
     }
 };
+
