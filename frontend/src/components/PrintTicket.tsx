@@ -2,6 +2,9 @@
   documentType: string;
   series: string;
   number: string;
+  companyName: string;
+  companyRuc: string;
+  companyAddress: string;
   customerName: string;
   customerDocument?: string;
   items: { description: string; quantity: number; unitPrice: number; total: number }[];
@@ -11,12 +14,13 @@
   date: string;
 }
 
-export default function PrintTicket({ documentType, series, number, companyName, companyRuc, companyAddress, customerName, customerDocument, items, subtotal, igv, total, date }: PrintTicketProps) {
+export default function PrintTicket({
+  documentType, series, number, companyName, companyRuc, companyAddress, customerName, customerDocument, items, subtotal, igv, total, date
+}: PrintTicketProps) {
   const fullNumber = `${series}-${number}`;
 
   return (
     <div className="print-ticket bg-white p-3 sm:p-4 font-mono text-xs text-black w-full max-w-[280px] sm:max-w-[300px] mx-auto">
-      {/* Encabezado */}
       <div className="text-center mb-2">
         <h2 className="font-bold text-sm sm:text-base">{companyName}</h2>
         <p className="text-[10px] sm:text-xs">RUC: {companyRuc}</p>
@@ -25,7 +29,6 @@ export default function PrintTicket({ documentType, series, number, companyName,
 
       <div className="border-b border-dashed border-black my-2"></div>
 
-      {/* Datos del Comprobante */}
       <div className="mb-2">
         <p className="font-bold text-center text-sm sm:text-base">{documentType} ELECTRÓNICA</p>
         <p className="text-center text-[10px] sm:text-xs">{fullNumber}</p>
@@ -34,7 +37,6 @@ export default function PrintTicket({ documentType, series, number, companyName,
 
       <div className="border-b border-dashed border-black my-2"></div>
 
-      {/* Datos del Cliente */}
       <div className="mb-2">
         <p className="text-[10px] sm:text-xs">Cliente: {customerName}</p>
         {customerDocument && <p className="text-[10px] sm:text-xs">Doc: {customerDocument}</p>}
@@ -42,7 +44,6 @@ export default function PrintTicket({ documentType, series, number, companyName,
 
       <div className="border-b border-dashed border-black my-2"></div>
 
-      {/* Items */}
       <div className="mb-2">
         <table className="w-full text-[10px] sm:text-xs">
           <thead>
@@ -66,7 +67,6 @@ export default function PrintTicket({ documentType, series, number, companyName,
 
       <div className="border-b border-dashed border-black my-2"></div>
 
-      {/* Totales */}
       <div className="mb-2 text-right space-y-1 text-[10px] sm:text-xs">
         <div className="flex justify-between">
           <span>Op. Gravada:</span>
@@ -84,13 +84,10 @@ export default function PrintTicket({ documentType, series, number, companyName,
 
       <div className="border-b border-dashed border-black my-2"></div>
 
-      {/* Pie de página */}
       <div className="text-center mt-2 text-[10px] sm:text-xs">
         <p>¡Gracias por su compra!</p>
         <p className="mt-1 text-[9px] sm:text-[10px]">Representación impresa de la {documentType} Electrónica</p>
         <p className="text-[9px] sm:text-[10px]">Autorizado mediante Resolución de Superintendencia</p>
-        
-        {/* QR Simulado */}
         <div className="mt-2 flex justify-center">
           <div className="w-12 h-12 sm:w-16 sm:h-16 bg-black"></div>
         </div>
@@ -98,4 +95,3 @@ export default function PrintTicket({ documentType, series, number, companyName,
     </div>
   );
 }
-
