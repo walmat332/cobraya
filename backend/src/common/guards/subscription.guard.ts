@@ -60,7 +60,9 @@ export class SubscriptionGuard implements CanActivate {
         throw error;
       }
       console.error('❌ [GUARDIA] Error inesperado:', error);
-      return true;
+      throw new ForbiddenException('Error interno al verificar suscripción.');
+      return false;
     }
   }
 }
+
