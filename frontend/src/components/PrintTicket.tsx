@@ -11,18 +11,16 @@
   date: string;
 }
 
-export default function PrintTicket({
-  documentType, series, number, customerName, customerDocument, items, subtotal, igv, total, date
-}: PrintTicketProps) {
+export default function PrintTicket({ documentType, series, number, companyName, companyRuc, companyAddress, customerName, customerDocument, items, subtotal, igv, total, date }: PrintTicketProps) {
   const fullNumber = `${series}-${number}`;
 
   return (
     <div className="print-ticket bg-white p-3 sm:p-4 font-mono text-xs text-black w-full max-w-[280px] sm:max-w-[300px] mx-auto">
       {/* Encabezado */}
       <div className="text-center mb-2">
-        <h2 className="font-bold text-sm sm:text-base">COBRAYA S.A.C.</h2>
-        <p className="text-[10px] sm:text-xs">RUC: 20123456789</p>
-        <p className="text-[10px] sm:text-xs">Av. Ejemplo 123, Lima</p>
+        <h2 className="font-bold text-sm sm:text-base">{companyName}</h2>
+        <p className="text-[10px] sm:text-xs">RUC: {companyRuc}</p>
+        <p className="text-[10px] sm:text-xs">{companyAddress}</p>
       </div>
 
       <div className="border-b border-dashed border-black my-2"></div>
@@ -100,3 +98,4 @@ export default function PrintTicket({
     </div>
   );
 }
+
