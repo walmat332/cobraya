@@ -1,4 +1,4 @@
-﻿import { IsEmail, IsString, MinLength, IsNotEmpty } from 'class-validator';
+﻿import { IsEmail, IsString, MinLength, IsNotEmpty , Matches } from 'class-validator';
 
 export class RegisterDto {
   @IsEmail()
@@ -16,3 +16,4 @@ export class RegisterDto {
   @IsNotEmpty()
   companyRuc: string;
 }
+

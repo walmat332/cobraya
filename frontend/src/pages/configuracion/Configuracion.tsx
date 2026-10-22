@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+﻿import { useState, useEffect } from 'react';
 import { api } from '../../lib/api';
 import { Save, AlertCircle, CheckCircle2 } from 'lucide-react';
 
@@ -85,19 +85,22 @@ export default function Configuracion() {
     if (!form.razonSocial?.trim()) {
       errors.razonSocial = 'La razón social es obligatoria';
     } else if (form.razonSocial.trim().length < 6) {
-      errors.razonSocial = 'Mínimo 6 caracteres';
+      errors.razonSocial = 'Mó­nimo 6 caracteres';
     }
 
     if (!form.ruc?.trim()) {
       errors.ruc = 'El RUC es obligatorio';
-    } else if (!/^\d{11}$/.test(form.ruc.trim())) {
-      errors.ruc = 'El RUC debe tener 11 dígitos numéricos';
+    } else if (!/^(\\d{8}|\\d{11})$/.test(form.ruc.trim())) {
+      errors.ruc = 'El documento debe tener 8 dígitos (DNI) o 11 dígitos (RUC)';
     }
 
     if (form.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim())) {
-      errors.email = 'Formato de correo inválido';
+      errors.email = 'Formato de correo invó¡lido';
     }
 
+        if (form.phone && !/^\d{9}$/.test(form.phone.trim())) {
+      errors.phone = 'El número de celular debe tener 9 dígitos';
+    }
     setFormErrors(errors);
     return Object.keys(errors).length === 0;
   };
@@ -194,7 +197,7 @@ export default function Configuracion() {
 
           <div>
             <label className="block text-sm font-medium text-slate-700 mb-1">
-              RUC <span className="text-red-500">*</span>
+              RUC o DNI <span className="text-red-500">*</span>
             </label>
             <input
               name="ruc"
@@ -203,7 +206,7 @@ export default function Configuracion() {
               onChange={handleChange}
               maxLength={13}
               className={`w-full px-3 py-2 rounded-lg border ${formErrors.ruc ? 'border-red-500' : 'border-slate-300'} focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition-all`}
-              placeholder="Ej: 20123456789"
+              placeholder="Ej: 12345678 (DNI) o 20123456789 (RUC)"
             />
             {formErrors.ruc && (
               <p className="text-xs text-red-500 mt-1">{formErrors.ruc}</p>
@@ -247,7 +250,7 @@ export default function Configuracion() {
               value={form.phone}
               onChange={handleChange}
               className="w-full px-3 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition-all"
-              placeholder="+51 999 999 999"
+              placeholder="999999999 (9 dígitos)"
             />
           </div>
         </div>
