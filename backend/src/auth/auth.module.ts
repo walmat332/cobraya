@@ -12,11 +12,11 @@ import { Company } from '../entities/company.entity';
 @Module({
   imports: [
     TypeOrmModule.forFeature([User, Company]),
-    PassportModule,
+    PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.registerAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
-        secret: configService.get('JWT_SECRET'),
+        secret: configService.get<string>('JWT_SECRET'),
         signOptions: { expiresIn: '24h' },
       }),
       inject: [ConfigService],
@@ -24,6 +24,6 @@ import { Company } from '../entities/company.entity';
   ],
   providers: [AuthService, JwtStrategy],
   controllers: [AuthController],
-  exports: [AuthService], // Para que otros módulos puedan usarlo si es necesario
+  exports: [AuthService, JwtModule],
 })
 export class AuthModule {}

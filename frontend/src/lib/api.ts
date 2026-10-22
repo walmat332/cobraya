@@ -19,7 +19,10 @@ export const api = {
   async get(endpoint: string) {
     const token = localStorage.getItem('token');
     const res = await fetch(`${API_URL}${endpoint}`, {
-      headers: { 'Authorization': `Bearer ${token}` },
+      headers: { 
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}` 
+      },
     });
     if (!res.ok) throw new Error('Error en la petición');
     return res.json();
@@ -27,6 +30,10 @@ export const api = {
 
   async post(endpoint: string, data: Record<string, unknown>) {
     const token = localStorage.getItem('token');
+    console.log('🚀 [API] Enviando petición POST a:', `${API_URL}${endpoint}`);
+    console.log('🔑 [API] ¿Hay token?:', !!token);
+    console.log('📦 [API] Datos a enviar:', data);
+    
     const res = await fetch(`${API_URL}${endpoint}`, {
       method: 'POST',
       headers: { 
@@ -35,7 +42,12 @@ export const api = {
       },
       body: JSON.stringify(data),
     });
-    if (!res.ok) throw new Error('Error al guardar');
+    
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      console.error('❌ [API] Error del backend:', err);
+      throw new Error(err.message || `Error ${res.status} al guardar`);
+    }
     return res.json();
   },
 

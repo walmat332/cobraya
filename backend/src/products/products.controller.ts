@@ -17,7 +17,7 @@ import { CompanyId } from '../common/decorators/company-id.decorator';
 
 @Controller('products')
 @UseGuards(JwtAuthGuard)
-@UseGuards(SubscriptionGuard)
+// @UseGuards(SubscriptionGuard) - TEMPORALMENTE DESACTIVADO
 export class ProductsController {
   constructor(private productsService: ProductsService) {}
 
@@ -53,4 +53,5 @@ export class ProductsController {
     return this.productsService.remove(id, companyId);
   }
 }
+
 

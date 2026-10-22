@@ -17,7 +17,7 @@ import { CompanyId } from '../common/decorators/company-id.decorator';
 
 @Controller('documents')
 @UseGuards(JwtAuthGuard)
-@UseGuards(SubscriptionGuard)
+// // @UseGuards(SubscriptionGuard) - TEMPORALMENTE DESACTIVADO - TEMPORALMENTE DESACTIVADO
 export class DocumentsController {
   constructor(private readonly documentsService: DocumentsService) {}
 
@@ -55,5 +55,8 @@ export class DocumentsController {
     return this.documentsService.updateStatus(id, updateDto.status, companyId);
   }
 }
+
+
+
 
 
