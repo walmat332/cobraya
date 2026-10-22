@@ -1,4 +1,5 @@
-﻿import { SubscriptionGuard } from '../common/guards/subscription.guard';
+﻿import { JwtSubscriptionGuard } from '../common/guards/jwt-subscription.guard';
+import { SubscriptionGuard } from '../common/guards/subscription.guard';
 import {
   Controller,
   Get,
@@ -16,8 +17,7 @@ import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { CompanyId } from '../common/decorators/company-id.decorator';
 
 @Controller('documents')
-@UseGuards(JwtAuthGuard)
-@UseGuards(SubscriptionGuard)
+@UseGuards(JwtSubscriptionGuard)
 export class DocumentsController {
   constructor(private readonly documentsService: DocumentsService) {}
 
@@ -55,6 +55,7 @@ export class DocumentsController {
     return this.documentsService.updateStatus(id, updateDto.status, companyId);
   }
 }
+
 
 
 
