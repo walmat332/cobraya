@@ -17,49 +17,49 @@ export default function PrintTicket({
   const fullNumber = `${series}-${number}`;
 
   return (
-    <div className="print-ticket bg-white p-4 font-mono text-xs text-black max-w-[80mm] mx-auto">
+    <div className="print-ticket bg-white p-3 sm:p-4 font-mono text-xs text-black w-full max-w-[280px] sm:max-w-[300px] mx-auto">
       {/* Encabezado */}
       <div className="text-center mb-2">
-        <h2 className="font-bold text-sm">COBRAYA S.A.C.</h2>
-        <p>RUC: 20123456789</p>
-        <p>Av. Ejemplo 123, Lima</p>
+        <h2 className="font-bold text-sm sm:text-base">COBRAYA S.A.C.</h2>
+        <p className="text-[10px] sm:text-xs">RUC: 20123456789</p>
+        <p className="text-[10px] sm:text-xs">Av. Ejemplo 123, Lima</p>
       </div>
 
       <div className="border-b border-dashed border-black my-2"></div>
 
       {/* Datos del Comprobante */}
       <div className="mb-2">
-        <p className="font-bold text-center text-sm">{documentType} ELECTRÓNICA</p>
-        <p className="text-center">{fullNumber}</p>
-        <p className="text-center">Fecha: {date}</p>
+        <p className="font-bold text-center text-sm sm:text-base">{documentType} ELECTRÓNICA</p>
+        <p className="text-center text-[10px] sm:text-xs">{fullNumber}</p>
+        <p className="text-center text-[10px] sm:text-xs">Fecha: {date}</p>
       </div>
 
       <div className="border-b border-dashed border-black my-2"></div>
 
       {/* Datos del Cliente */}
       <div className="mb-2">
-        <p>Cliente: {customerName}</p>
-        {customerDocument && <p>Doc: {customerDocument}</p>}
+        <p className="text-[10px] sm:text-xs">Cliente: {customerName}</p>
+        {customerDocument && <p className="text-[10px] sm:text-xs">Doc: {customerDocument}</p>}
       </div>
 
       <div className="border-b border-dashed border-black my-2"></div>
 
       {/* Items */}
       <div className="mb-2">
-        <table className="w-full">
+        <table className="w-full text-[10px] sm:text-xs">
           <thead>
             <tr className="border-b border-black">
-              <th className="text-left">Cant</th>
-              <th className="text-left">Desc</th>
-              <th className="text-right">Total</th>
+              <th className="text-left py-1">Cant</th>
+              <th className="text-left py-1">Desc</th>
+              <th className="text-right py-1">Total</th>
             </tr>
           </thead>
           <tbody>
             {items.map((item, index) => (
               <tr key={index}>
-                <td>{item.quantity}</td>
-                <td className="truncate">{item.description}</td>
-                <td className="text-right">{item.total.toFixed(2)}</td>
+                <td className="py-1">{item.quantity}</td>
+                <td className="py-1 truncate max-w-[120px]">{item.description}</td>
+                <td className="text-right py-1">{item.total.toFixed(2)}</td>
               </tr>
             ))}
           </tbody>
@@ -69,7 +69,7 @@ export default function PrintTicket({
       <div className="border-b border-dashed border-black my-2"></div>
 
       {/* Totales */}
-      <div className="mb-2 text-right space-y-1">
+      <div className="mb-2 text-right space-y-1 text-[10px] sm:text-xs">
         <div className="flex justify-between">
           <span>Op. Gravada:</span>
           <span>S/ {subtotal.toFixed(2)}</span>
@@ -78,7 +78,7 @@ export default function PrintTicket({
           <span>IGV (18%):</span>
           <span>S/ {igv.toFixed(2)}</span>
         </div>
-        <div className="flex justify-between font-bold text-sm">
+        <div className="flex justify-between font-bold text-sm pt-1 border-t border-black mt-1">
           <span>TOTAL:</span>
           <span>S/ {total.toFixed(2)}</span>
         </div>
@@ -87,14 +87,14 @@ export default function PrintTicket({
       <div className="border-b border-dashed border-black my-2"></div>
 
       {/* Pie de página */}
-      <div className="text-center mt-2">
+      <div className="text-center mt-2 text-[10px] sm:text-xs">
         <p>¡Gracias por su compra!</p>
-        <p className="mt-1 text-[10px]">Representación impresa de la {documentType} Electrónica</p>
-        <p className="text-[10px]">Autorizado mediante Resolución de Superintendencia</p>
+        <p className="mt-1 text-[9px] sm:text-[10px]">Representación impresa de la {documentType} Electrónica</p>
+        <p className="text-[9px] sm:text-[10px]">Autorizado mediante Resolución de Superintendencia</p>
         
         {/* QR Simulado */}
         <div className="mt-2 flex justify-center">
-          <div className="w-16 h-16 bg-black"></div>
+          <div className="w-12 h-12 sm:w-16 sm:h-16 bg-black"></div>
         </div>
       </div>
     </div>
