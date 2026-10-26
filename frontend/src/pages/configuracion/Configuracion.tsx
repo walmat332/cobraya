@@ -1,12 +1,5 @@
 ﻿import { useState, useEffect } from 'react';
 import { api } from '../../lib/api';
-
-    param($match)
-    $imports = $match.Value
-    if ($imports -notmatch "\bX\b") {
-      $imports -replace "}", ", X }"
-    } else {
-      $imports
     }
   ;
 
@@ -339,5 +332,7 @@ export default function Configuracion() {
     </div>
   );
 }
+
+
 
 
