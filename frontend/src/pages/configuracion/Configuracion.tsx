@@ -188,7 +188,7 @@ export default function Configuracion() {
               type="text"
               value={form.razonSocial}
               onChange={handleChange}
-              className={`w-full px-3 py-2 rounded-lg border ${formErrors.razonSocial ? 'border-red-500' : 'border-slate-300'} focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition-all`}
+              className={w-full px-3 py-2 rounded-lg border  focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition-all}
               placeholder="Ej: Mi Negocio S.A.C."
             />
             {formErrors.razonSocial && (
@@ -206,7 +206,7 @@ export default function Configuracion() {
               value={form.ruc}
               onChange={handleChange}
               maxLength={11}
-              className={`w-full px-3 py-2 rounded-lg border ${formErrors.ruc ? 'border-red-500' : 'border-slate-300'} focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition-all`}
+              className={w-full px-3 py-2 rounded-lg border  focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition-all}
               placeholder="Ej: 12345678 (DNI) o 20123456789 (RUC)"
             />
             {formErrors.ruc && (
@@ -261,18 +261,14 @@ export default function Configuracion() {
               type="email"
               value={form.email}
               onChange={handleChange}
-              className={`w-full px-3 py-2 rounded-lg border ${formErrors.email ? 'border-red-500' : 'border-slate-300'} focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition-all`}
+              className={w-full px-3 py-2 rounded-lg border  focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition-all}
               placeholder="contacto@negocio.com"
             />
           </div>
 
           <div className="flex items-center justify-between pt-7">
             <span className="text-sm font-medium text-slate-700">Entorno SUNAT</span>
-            <span className={`px-2 py-1 rounded text-xs font-medium ${
-              form.sunatEnvironment === 'DEMO'
-                ? 'bg-blue-100 text-blue-700'
-                : 'bg-green-100 text-green-700'
-            }`}>
+            <span className={px-2 py-1 rounded text-xs font-medium }>
               {form.sunatEnvironment === 'DEMO' ? 'Demo' : 'Producción'}
             </span>
           </div>
@@ -305,7 +301,6 @@ export default function Configuracion() {
         </div>
       </form>
 
-      {/* ✅ MENSAJE DE ÉXITO MEJORADO Y VISIBLE EN MÓVIL */}
       {saved && (
         <div className="mt-6 p-4 bg-gradient-to-r from-green-400 to-emerald-500 border-2 border-green-600 rounded-xl shadow-2xl">
           <div className="flex items-center gap-3">
