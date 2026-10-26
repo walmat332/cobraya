@@ -1,6 +1,14 @@
 ﻿import { useState, useEffect } from 'react';
 import { api } from '../../lib/api';
-import { Save, AlertCircle, CheckCircle2 } from 'lucide-react';
+
+    param($match)
+    $imports = $match.Value
+    if ($imports -notmatch "\bX\b") {
+      $imports -replace "}", ", X }"
+    } else {
+      $imports
+    }
+  ;
 
 interface CompanyData {
   id: string;
@@ -311,12 +319,25 @@ export default function Configuracion() {
       </form>
 
       {saved && (
-        <div className="mt-4 p-3 bg-green-50 border border-green-200 rounded-lg text-green-700 text-sm flex items-start gap-3">
-          <CheckCircle2 size={20} className="flex-shrink-0 mt-0.5" />
-          <span>Los datos se guardaron correctamente.</span>
-        </div>
-      )}
+  <div className="mt-6 p-4 bg-gradient-to-r from-green-400 to-emerald-500 border-2 border-green-600 rounded-xl shadow-2xl animate-fade-in">
+    <div className="flex items-center gap-3">
+      <CheckCircle2 size={28} className="text-white flex-shrink-0" />
+      <div className="flex-1">
+        <p className="text-white font-bold text-base">¡Éxito!</p>
+        <p className="text-green-50 text-sm mt-1">Los datos se guardaron correctamente.</p>
+      </div>
+      <button 
+        onClick={() => setSaved(false)}
+        className="text-white hover:text-green-100 transition-colors"
+        aria-label="Cerrar"
+      >
+        <X size={20} />
+      </button>
+    </div>
+  </div>
+)}
     </div>
   );
 }
+
 
