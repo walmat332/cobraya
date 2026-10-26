@@ -85,22 +85,23 @@ export default function Configuracion() {
     if (!form.razonSocial?.trim()) {
       errors.razonSocial = 'La razón social es obligatoria';
     } else if (form.razonSocial.trim().length < 6) {
-      errors.razonSocial = 'Mó­nimo 6 caracteres';
+      errors.razonSocial = 'Mínimo 6 caracteres';
     }
 
     if (!form.ruc?.trim()) {
-      errors.ruc = 'El RUC es obligatorio';
+      errors.ruc = 'El RUC o DNI es obligatorio';
     } else if (!/^(\d{8}|\d{11})$/.test(form.ruc.trim())) {
       errors.ruc = 'El documento debe tener 8 dígitos (DNI) o 11 dígitos (RUC)';
     }
 
     if (form.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim())) {
-      errors.email = 'Formato de correo invó¡lido';
+      errors.email = 'Formato de correo inválido';
     }
 
-        if (form.phone && !/^\d{9}$/.test(form.phone.trim())) {
+    if (form.phone && !/^\d{9}$/.test(form.phone.trim())) {
       errors.phone = 'El número de celular debe tener 9 dígitos';
     }
+    
     setFormErrors(errors);
     return Object.keys(errors).length === 0;
   };
@@ -204,7 +205,7 @@ export default function Configuracion() {
               type="text"
               value={form.ruc}
               onChange={handleChange}
-              maxLength={13}
+              maxLength={11}
               className={`w-full px-3 py-2 rounded-lg border ${formErrors.ruc ? 'border-red-500' : 'border-slate-300'} focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition-all`}
               placeholder="Ej: 12345678 (DNI) o 20123456789 (RUC)"
             />
@@ -225,9 +226,6 @@ export default function Configuracion() {
               className="w-full px-3 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition-all"
               placeholder="Nombre para facturación"
             />
-            {formErrors.commercialName && (
-              <p className="text-xs text-red-500 mt-1">{formErrors.commercialName}</p>
-            )}
           </div>
 
           <div>
@@ -250,7 +248,7 @@ export default function Configuracion() {
               value={form.phone}
               onChange={handleChange}
               className="w-full px-3 py-2 rounded-lg border border-slate-300 focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition-all"
-              placeholder="999999999 (9 dígitos)"
+              placeholder="999999999"
             />
           </div>
         </div>
@@ -266,9 +264,6 @@ export default function Configuracion() {
               className={`w-full px-3 py-2 rounded-lg border ${formErrors.email ? 'border-red-500' : 'border-slate-300'} focus:ring-2 focus:ring-primary-500 focus:border-transparent outline-none transition-all`}
               placeholder="contacto@negocio.com"
             />
-            {formErrors.email && (
-              <p className="text-xs text-red-500 mt-1">{formErrors.email}</p>
-            )}
           </div>
 
           <div className="flex items-center justify-between pt-7">
@@ -310,13 +305,25 @@ export default function Configuracion() {
         </div>
       </form>
 
+      {/* ✅ MENSAJE DE ÉXITO MEJORADO Y VISIBLE EN MÓVIL */}
       {saved && (
-        <div className="mt-4 p-3 bg-green-50 border border-green-200 rounded-lg text-green-700 text-sm flex items-start gap-3">
-          <CheckCircle2 size={20} className="flex-shrink-0 mt-0.5" />
-          <span>Los datos se guardaron correctamente.</span>
+        <div className="mt-6 p-4 bg-gradient-to-r from-green-400 to-emerald-500 border-2 border-green-600 rounded-xl shadow-2xl">
+          <div className="flex items-center gap-3">
+            <CheckCircle2 size={28} className="text-white flex-shrink-0" />
+            <div className="flex-1">
+              <p className="text-white font-bold text-base">¡Éxito!</p>
+              <p className="text-green-50 text-sm mt-1">Los datos se guardaron correctamente.</p>
+            </div>
+            <button 
+              onClick={() => setSaved(false)}
+              className="text-white hover:text-green-100 transition-colors p-1"
+              aria-label="Cerrar"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+            </button>
+          </div>
         </div>
       )}
     </div>
   );
 }
-
