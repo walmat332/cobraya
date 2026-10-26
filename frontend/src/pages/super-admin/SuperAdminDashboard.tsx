@@ -28,7 +28,7 @@ export default function SuperAdminDashboard() {
       } else {
         setError('No tienes permisos de Super Administrador o la sesión expiró.');
       }
-    } catch (err) {
+    } catch {
       setError('Error al cargar las empresas.');
     } finally {
       setLoading(false);
@@ -55,7 +55,7 @@ export default function SuperAdminDashboard() {
       } else {
         alert('Error al actualizar el estado');
       }
-    } catch (err) {
+    } catch {
       alert('Error de conexión');
     }
   };

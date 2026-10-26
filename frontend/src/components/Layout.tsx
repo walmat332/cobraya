@@ -1,6 +1,6 @@
 ﻿import { useState } from 'react';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
-import { Receipt, LayoutDashboard, PlusCircle, Package, Settings, LogOut, FileText, TrendingUp, Menu, X } from 'lucide-react';
+import { Receipt, PlusCircle, LogOut, Menu, X, Home, FileCheck, Box, BarChart3, Cog } from 'lucide-react';
 import { api } from '../lib/api';
 
 export default function Layout() {
@@ -16,95 +16,73 @@ export default function Layout() {
 
   const handleNavigate = (path: string) => {
     navigate(path);
-    setSidebarOpen(false); // Cerrar sidebar al navegar en móvil
+    setSidebarOpen(false);
   };
 
   const menuItems = [
-    { path: '/dashboard', icon: LayoutDashboard, label: 'Inicio' },
-    { path: '/nueva-venta', icon: PlusCircle, label: 'Nueva Venta', highlight: true },
-    { path: '/comprobantes', icon: FileText, label: 'Comprobantes' },
-    { path: '/productos', icon: Package, label: 'Productos' },
-    { path: '/reportes', icon: TrendingUp, label: 'Reportes' },
-    { path: '/configuracion', icon: Settings, label: 'Configuración' },
+    { path: '/dashboard', icon: Home, label: 'Inicio', bg: 'bg-green-100', text: 'text-green-800', hover: 'hover:bg-green-200', iconBg: 'bg-green-200' },
+    { path: '/nueva-venta', icon: PlusCircle, label: 'Nueva Venta', bg: 'bg-teal-600', text: 'text-white', hover: 'hover:bg-teal-700', iconBg: 'bg-teal-500', highlight: true, shadow: 'shadow-lg' },
+    { path: '/comprobantes', icon: FileCheck, label: 'Comprobantes', bg: 'bg-orange-100', text: 'text-orange-800', hover: 'hover:bg-orange-200', iconBg: 'bg-orange-200' },
+    { path: '/productos', icon: Box, label: 'Productos', bg: 'bg-sky-100', text: 'text-sky-800', hover: 'hover:bg-sky-200', iconBg: 'bg-sky-200' },
+    { path: '/reportes', icon: BarChart3, label: 'Reportes', bg: 'bg-purple-100', text: 'text-purple-800', hover: 'hover:bg-purple-200', iconBg: 'bg-purple-200' },
+    { path: '/configuracion', icon: Cog, label: 'Configuración', bg: 'bg-pink-100', text: 'text-pink-800', hover: 'hover:bg-pink-200', iconBg: 'bg-pink-200' },
   ];
 
   return (
     <div className="min-h-screen flex bg-slate-50">
-      {/* Overlay para móvil (fondo oscuro cuando el sidebar está abierto) */}
       {sidebarOpen && (
-        <div 
-          className="fixed inset-0 bg-black bg-opacity-50 z-20 lg:hidden"
-          onClick={() => setSidebarOpen(false)}
-        />
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-20 lg:hidden" onClick={() => setSidebarOpen(false)} />
       )}
 
-      {/* Sidebar - Oculto en móvil por defecto, visible en desktop */}
-      <aside className={`fixed lg:static inset-y-0 left-0 z-30 w-64 bg-white border-r border-slate-200 flex flex-col transform transition-transform duration-300 ease-in-out ${
-        sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
-      }`}>
-        <div className="p-6 border-b border-slate-100 flex items-center justify-between">
-          <div className="flex items-center gap-3 text-blue-600 font-bold text-xl">
-            <Receipt size={28} />
+      <aside className={`fixed lg:static inset-y-0 left-0 z-30 w-full lg:w-72 bg-white border-r border-slate-200 flex flex-col transform transition-transform duration-300 ease-in-out ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}>
+        <div className="p-6 border-b border-slate-100 flex items-center justify-between bg-gradient-to-r from-blue-50 to-white">
+          <div className="flex items-center gap-3 text-blue-600 font-bold text-2xl">
+            <Receipt size={32} />
             <span>CobraYa</span>
           </div>
-          {/* Botón X solo visible en móvil */}
-          <button 
-            onClick={() => setSidebarOpen(false)}
-            className="lg:hidden p-2 rounded-lg hover:bg-slate-100"
-          >
+          <button onClick={() => setSidebarOpen(false)} className="lg:hidden p-2 rounded-lg hover:bg-slate-100">
             <X size={24} />
           </button>
         </div>
 
-        <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
+        <nav className="flex-1 p-4 space-y-3 overflow-y-auto">
           {menuItems.map((item) => {
             const isActive = location.pathname === item.path;
             return (
               <button
                 key={item.path}
                 onClick={() => handleNavigate(item.path)}
-                className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors ${
-                  item.highlight 
-                    ? 'bg-blue-600 text-white hover:bg-blue-700 shadow-md' 
-                    : isActive 
-                      ? 'bg-blue-50 text-blue-700' 
-                      : 'text-slate-600 hover:bg-slate-100'
-                }`}
+                className={`w-full flex items-center gap-4 px-5 py-4 rounded-2xl font-bold text-base transition-all transform active:scale-95 ${item.bg} ${item.text} ${item.hover} ${item.shadow || 'shadow-sm'} ${isActive ? 'ring-2 ring-offset-2 ring-blue-400' : ''}`}
               >
-                <item.icon size={20} />
-                {item.label}
+                <div className={`p-2 rounded-xl ${item.highlight ? 'bg-white/20' : item.iconBg}`}>
+                  <item.icon size={24} />
+                </div>
+                <span className="flex-1 text-left">{item.label}</span>
+                {item.highlight && <PlusCircle size={20} className="opacity-80" />}
               </button>
             );
           })}
         </nav>
 
-        <div className="p-4 border-t border-slate-100">
-          <div className="mb-4 px-4">
-            <p className="text-sm font-medium text-slate-900 truncate">{user.email || 'Usuario'}</p>
+        <div className="p-4 border-t border-slate-100 bg-gradient-to-r from-slate-50 to-white">
+          <div className="mb-4 px-4 py-3 bg-white rounded-xl shadow-sm border border-slate-200">
+            <p className="text-sm font-bold text-slate-900 truncate">{user.email || 'Usuario'}</p>
             <p className="text-xs text-slate-500 truncate">{user.companyName || 'Mi Empresa'}</p>
           </div>
-          <button 
-            onClick={handleLogout}
-            className="w-full flex items-center gap-3 px-4 py-2 text-sm font-medium text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-          >
-            <LogOut size={18} />
+          <button onClick={handleLogout} className="w-full flex items-center gap-3 px-4 py-3 text-sm font-bold text-red-600 bg-red-50 hover:bg-red-100 rounded-xl transition-colors">
+            <LogOut size={20} />
             Cerrar Sesión
           </button>
         </div>
       </aside>
 
-      {/* Contenido principal */}
       <div className="flex-1 flex flex-col min-w-0">
-        {/* Header móvil con botón hamburguesa */}
-        <header className="lg:hidden bg-white border-b border-slate-200 p-4 flex items-center gap-3 sticky top-0 z-10">
-          <button 
-            onClick={() => setSidebarOpen(true)}
-            className="p-2 rounded-lg hover:bg-slate-100"
-          >
-            <Menu size={24} />
+        <header className="lg:hidden bg-white border-b border-slate-200 p-4 flex items-center gap-3 sticky top-0 z-10 shadow-sm">
+          <button onClick={() => setSidebarOpen(true)} className="p-2 rounded-xl hover:bg-slate-100 transition-colors">
+            <Menu size={24} className="text-slate-700" />
           </button>
-          <div className="flex items-center gap-2 text-blue-600 font-bold text-lg">
-            <Receipt size={24} />
+          <div className="flex items-center gap-2 text-blue-600 font-bold text-xl">
+            <Receipt size={28} />
             <span>CobraYa</span>
           </div>
         </header>
