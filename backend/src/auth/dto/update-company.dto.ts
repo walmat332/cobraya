@@ -1,4 +1,4 @@
-import {
+﻿import {
   IsString,
   IsNotEmpty,
   MinLength,
@@ -17,8 +17,8 @@ export class UpdateCompanyDto {
 
   @IsString()
   @IsNotEmpty()
-  @Matches(/^\d{11}$/, {
-    message: 'El RUC debe tener exactamente 11 dígitos numéricos',
+  @Matches(/^\d{8}$|^\d{11}$/, {
+    message: 'El documento debe tener 8 dígitos (DNI) o 11 dígitos (RUC)',
   })
   ruc: string;
 
@@ -34,7 +34,8 @@ export class UpdateCompanyDto {
 
   @IsOptional()
   @IsEmail()
-  email?: string;
+  @MaxLength(100)
+  email: string;
 
   @IsOptional()
   @IsString()

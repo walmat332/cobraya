@@ -1,7 +1,7 @@
 ﻿import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { api } from '../lib/api';
-import { Building2, Mail, Lock, User, ArrowRight } from 'lucide-react';
+import { Building2, Mail, Lock, User, ArrowRight, Loader2 } from 'lucide-react';
 
 export default function Register() {
   const navigate = useNavigate();
@@ -17,17 +17,22 @@ export default function Register() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Validación básica antes de enviar
+    if (formData.ruc.length !== 8 && formData.ruc.length !== 11) {
+      setError('El RUC/DNI debe tener 8 o 11 dígitos');
+      return;
+    }
+
     setLoading(true);
     setError('');
 
     try {
-      // Usamos la función api que ya tiene la URL correcta de Render
       await api.register(formData.email, formData.password, formData.companyName, formData.ruc);
-      
       alert('¡Registro exitoso! Ahora puedes iniciar sesión.');
       navigate('/');
     } catch (err: any) {
-      setError(err.message || 'Error al registrar la empresa. Verifica que el RUC o Email no estén ya registrados.');
+      setError(err.message || 'Error al registrar. Verifica que el RUC/DNI o Email no estén ya registrados.');
     } finally {
       setLoading(false);
     }
@@ -76,15 +81,34 @@ export default function Register() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1">RUC</label>
+            <label className="block text-sm font-medium text-slate-700 mb-1">RUC o DNI</label>
             <div className="relative">
               <Building2 className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
-              <input type="text" required maxLength={11} className="w-full pl-10 pr-4 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent" placeholder="20123456789" value={formData.ruc} onChange={(e) => setFormData({...formData, ruc: e.target.value.replace(/\D/g, '')})} />
+              <input 
+                type="text" 
+                required 
+                maxLength={11} 
+                className="w-full pl-10 pr-4 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent" 
+                placeholder="20123456789 o 12345678" 
+                value={formData.ruc} 
+                onChange={(e) => setFormData({...formData, ruc: e.target.value.replace(/\D/g, '')})} 
+              />
             </div>
           </div>
 
-          <button type="submit" disabled={loading} className="w-full py-3 bg-primary-600 text-white rounded-lg font-semibold hover:bg-primary-700 transition-colors flex items-center justify-center gap-2 disabled:opacity-50">
-            {loading ? 'Registrando...' : (<>Crear cuenta <ArrowRight size={18} /></>)}
+          <button 
+            type="submit" 
+            disabled={loading} 
+            className="w-full py-3 bg-primary-600 text-white rounded-lg font-semibold hover:bg-primary-700 transition-colors flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
+          >
+            {loading ? (
+              <>
+                <Loader2 className="animate-spin" size={18} />
+                Procesando... (Esto puede tomar unos segundos)
+              </>
+            ) : (
+              <>Crear cuenta <ArrowRight size={18} /></>
+            )}
           </button>
         </form>
 

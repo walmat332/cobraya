@@ -6,14 +6,14 @@ export class Company {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ unique: true })
+  @Column({ unique: true, length: 11 })
   ruc: string;
 
   @Column()
   razonSocial: string;
 
   @Column({ nullable: true })
-  address: string;
+  address?: string;
 
   @Column({ nullable: true })
   phone: string;
@@ -24,11 +24,11 @@ export class Company {
   @Column({ nullable: true, name: 'commercial_name' })
   commercialName: string;
 
-  @Column({ default: 'DEMO' }) // DEMO o PROD
+  @Column({ default: 'DEMO' })
   sunatEnvironment: string;
 
   @OneToMany(() => User, (user) => user.company)
-  users: User[]; // 'TRIAL', 'ACTIVE', 'SUSPENDED' // 'BASICO', 'PRO', 'EMPRESARIAL'
+  users: User[];
 
   @Column({ type: 'varchar', default: 'TRIAL' })
   status: string;

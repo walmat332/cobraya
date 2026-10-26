@@ -43,7 +43,7 @@ export class AuthService {
     const savedCompany = await this.companyRepository.save(company);
 
     // 3. Crear el Usuario asociado a la Empresa
-    const hashedPassword = await bcrypt.hash(registerDto.password, 10);
+    const hashedPassword = await bcrypt.hash(registerDto.password, 8);
     const user = this.userRepository.create({
       id: randomUUID(),
       email: registerDto.email,
@@ -178,4 +178,5 @@ export class AuthService {
     }
   }
 }
+
 

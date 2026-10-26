@@ -90,7 +90,7 @@ export default function Configuracion() {
 
     if (!form.ruc?.trim()) {
       errors.ruc = 'El RUC es obligatorio';
-    } else if (!/^(\\d{8}|\\d{11})$/.test(form.ruc.trim())) {
+    } else if (!/^(\d{8}|\d{11})$/.test(form.ruc.trim())) {
       errors.ruc = 'El documento debe tener 8 dígitos (DNI) o 11 dígitos (RUC)';
     }
 
@@ -319,3 +319,4 @@ export default function Configuracion() {
     </div>
   );
 }
+
