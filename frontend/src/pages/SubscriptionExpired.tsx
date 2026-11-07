@@ -9,7 +9,7 @@ export default function SubscriptionExpired() {
 
   const handleReactivation = () => {
     window.open(
-      'https://wa.me/51999888777?text=Hola,%20quiero%20reactivar%20mi%20servicio%20de%20CobraYa',
+      'https://wa.me/51979345646',
       '_blank',
       'noopener,noreferrer',
     );
