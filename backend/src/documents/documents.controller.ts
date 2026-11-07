@@ -7,7 +7,6 @@ import {
   Body,
   Param,
   UseGuards,
-  Req,
 } from '@nestjs/common';
 import { DocumentsService } from './documents.service';
 import { CreateDocumentDto } from './dto/create-document.dto';
@@ -54,11 +53,3 @@ export class DocumentsController {
     return this.documentsService.updateStatus(id, updateDto.status, companyId);
   }
 }
-
-
-
-
-
-
-
-

@@ -11,54 +11,88 @@ interface Company {
   subscriptionEndDate: string | null;
 }
 
+interface CompaniesResponse {
+  ok: boolean;
+  data?: Company[];
+  error?: string;
+}
+
+async function getCompanies(): Promise<CompaniesResponse> {
+  try {
+    const token = localStorage.getItem('token');
+    const response = await fetch(`${API_URL}/super-admin/companies`, {
+      headers: { 'Authorization': `Bearer ${token}` },
+    });
+    if (response.ok) {
+      const data = await response.json();
+      return { ok: true, data };
+    }
+    return { ok: false, error: 'No tienes permisos de Super Administrador o la sesión expiró.' };
+  } catch {
+    return { ok: false, error: 'Error al cargar las empresas.' };
+  }
+}
+
 export default function SuperAdminDashboard() {
   const [companies, setCompanies] = useState<Company[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [btnLoading, setBtnLoading] = useState(false);
 
-  const fetchCompanies = useCallback(async () => {
+  const loadInitial = useCallback(async () => {
+    setLoading(true);
+    const result = await getCompanies();
+    if (result.ok && result.data) {
+      setCompanies(result.data);
+      setError('');
+    } else {
+      setError(result.error || 'Error desconocido');
+    }
+    setLoading(false);
+  }, []);
+
+  const refreshCompanies = useCallback(async () => {
+    setBtnLoading(true);
     try {
-      const token = localStorage.getItem('token');
-      const response = await fetch(`${API_URL}/super-admin/companies`, {
-        headers: { 'Authorization': `Bearer ${token}` }
-      });
-      if (response.ok) {
-        const data = await response.json();
-        setCompanies(data);
+      const result = await getCompanies();
+      if (result.ok && result.data) {
+        setCompanies(result.data);
+        setError('');
       } else {
-        setError('No tienes permisos de Super Administrador o la sesión expiró.');
+        setError(result.error || 'Error desconocido');
       }
-    } catch {
-      setError('Error al cargar las empresas.');
     } finally {
-      setLoading(false);
+      setBtnLoading(false);
     }
   }, []);
 
   useEffect(() => {
-    fetchCompanies();
-  }, [fetchCompanies]);
+    loadInitial();
+  }, [loadInitial]);
 
-  const handleStatusChange = async (companyId: string, newStatus: string, days: number = 0) => {
-    try {
-      const token = localStorage.getItem('token');
-      const response = await fetch(`${API_URL}/super-admin/companies/${companyId}/status`, {
-        method: 'PATCH',
-        headers: { 
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}` 
-        },
-        body: JSON.stringify({ status: newStatus, days })
-      });
-      if (response.ok) {
-        fetchCompanies();
-      } else {
-        alert('Error al actualizar el estado');
+  const handleStatusChange = useCallback(
+    async (companyId: string, newStatus: string, days: number = 0) => {
+      try {
+        const token = localStorage.getItem('token');
+        const response = await fetch(`${API_URL}/super-admin/companies/${companyId}/status`, {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+          },
+          body: JSON.stringify({ status: newStatus, days }),
+        });
+        if (response.ok) {
+          await refreshCompanies();
+        } else {
+          alert('Error al actualizar el estado');
+        }
+      } catch {
+        alert('Error de conexión');
       }
-    } catch {
-      alert('Error de conexión');
-    }
-  };
+    },
+    [refreshCompanies],
+  );
 
   if (loading) return <div className="p-8 text-center text-slate-500">Cargando panel de administración...</div>;
   if (error) return <div className="p-8 text-center text-red-600 font-semibold">{error}</div>;
@@ -70,8 +104,12 @@ export default function SuperAdminDashboard() {
           <h1 className="text-2xl font-bold text-slate-900">Panel de Super Administrador</h1>
           <p className="text-slate-500">Gestiona las suscripciones y accesos de tus clientes</p>
         </div>
-        <button onClick={fetchCompanies} className="flex items-center gap-2 px-4 py-2 bg-slate-100 rounded-lg hover:bg-slate-200 transition-colors text-sm font-medium">
-          <RefreshCw size={16} /> Actualizar
+        <button
+          onClick={refreshCompanies}
+          disabled={btnLoading}
+          className="flex items-center gap-2 px-4 py-2 bg-slate-100 rounded-lg hover:bg-slate-200 transition-colors text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          <RefreshCw size={16} className={btnLoading ? 'animate-spin' : ''} /> Actualizar
         </button>
       </div>
 
@@ -88,7 +126,7 @@ export default function SuperAdminDashboard() {
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100">
-            {companies.map(company => (
+            {companies.map((company) => (
               <tr key={company.id} className="hover:bg-slate-50 transition-colors">
                 <td className="p-4 font-medium text-slate-900">{company.razonSocial || 'Sin nombre'}</td>
                 <td className="p-4 text-slate-600 font-mono text-sm">{company.ruc || '-'}</td>
@@ -99,7 +137,7 @@ export default function SuperAdminDashboard() {
                 </td>
                 <td className="p-4">
                   <span className={`px-2 py-1 rounded-full text-xs font-semibold ${
-                    company.status === 'ACTIVE' ? 'bg-green-100 text-green-700' : 
+                    company.status === 'ACTIVE' ? 'bg-green-100 text-green-700' :
                     company.status === 'TRIAL' ? 'bg-amber-100 text-amber-700' : 'bg-red-100 text-red-700'
                   }`}>
                     {company.status}
@@ -110,16 +148,16 @@ export default function SuperAdminDashboard() {
                 </td>
                 <td className="p-4">
                   <div className="flex justify-center gap-2">
-                    <button 
+                    <button
                       onClick={() => handleStatusChange(company.id, 'ACTIVE', 30)}
-                      className="p-2 text-green-600 hover:bg-green-50 rounded-lg transition-colors" 
+                      className="p-2 text-green-600 hover:bg-green-50 rounded-lg transition-colors"
                       title="Activar por 30 días"
                     >
                       <CheckCircle size={18} />
                     </button>
-                    <button 
+                    <button
                       onClick={() => handleStatusChange(company.id, 'SUSPENDED', 0)}
-                      className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors" 
+                      className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
                       title="Suspender acceso"
                     >
                       <XCircle size={18} />

@@ -1,4 +1,4 @@
-﻿import { SubscriptionGuard } from '../common/guards/subscription.guard';
+﻿import { CompanyStatusGuard } from '../common/guards/company-status.guard';
 import {
   Controller,
   Get,
@@ -16,8 +16,7 @@ import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { CompanyId } from '../common/decorators/company-id.decorator';
 
 @Controller('products')
-@UseGuards(JwtAuthGuard)
-// @UseGuards(SubscriptionGuard) - TEMPORALMENTE DESACTIVADO
+@UseGuards(JwtAuthGuard, CompanyStatusGuard)
 export class ProductsController {
   constructor(private productsService: ProductsService) {}
 

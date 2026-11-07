@@ -1,4 +1,5 @@
-﻿import {
+﻿import { CompanyStatusGuard } from '../common/guards/company-status.guard';
+import {
   Controller,
   Post,
   Get,
@@ -32,13 +33,13 @@ export class AuthController {
   }
 
   @Get('me')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, CompanyStatusGuard)
   getCompany(@CompanyId() companyId: string) {
     return this.authService.getCompany(companyId);
   }
 
   @Put('me')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, CompanyStatusGuard)
   updateCompany(
     @Body() updateCompanyDto: UpdateCompanyDto,
     @CompanyId() companyId: string,

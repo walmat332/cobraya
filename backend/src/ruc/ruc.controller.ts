@@ -1,9 +1,10 @@
-﻿import { Controller, Get, Query, UseGuards, Req } from '@nestjs/common';
+﻿import { CompanyStatusGuard } from '../common/guards/company-status.guard';
+import { Controller, Get, Query, UseGuards, Req } from '@nestjs/common';
 import { RucService } from './ruc.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 
 @Controller('ruc')
-@UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard, CompanyStatusGuard)
 export class RucController {
   constructor(private readonly rucService: RucService) {}
 
